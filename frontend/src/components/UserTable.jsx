@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi"; // ✅ เพิ่มไอคอน
 
-export default function UserTable({ users }) {
+export default function UserTable({ users, onEdit, onDelete }) {
   const [search, setSearch] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(users || []);
 
@@ -17,7 +17,6 @@ export default function UserTable({ users }) {
     <div className="bg-white p-6 rounded-2xl shadow-lg border border-gray-200">
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
         <h2 className="text-xl font-semibold text-gray-800">รายชื่อผู้ใช้งานแพ็กเกจ</h2>
-
         <div className="relative w-full sm:w-64">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg" />
           <input
@@ -41,30 +40,39 @@ export default function UserTable({ users }) {
               <th className="px-4 py-3">แพ็กเกจ</th>
               <th className="px-4 py-3">บันทึกเมื่อ</th>
               <th className="px-4 py-3">หมดอายุ</th>
+              <th className="px-4 py-3 text-center">จัดการ</th>
             </tr>
           </thead>
           <tbody>
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
-                <tr
-                  key={user.id}
-                  className="border-t hover:bg-blue-50 transition-colors"
-                >
-                  <td className="px-4 py-2 text-gray-800">{user.name}</td>
+                <tr key={user.id} className="border-t hover:bg-blue-50 transition-colors">
+                  <td className="px-4 py-2">{user.name}</td>
                   <td className="px-4 py-2">{user.age}</td>
                   <td className="px-4 py-2">{user.time}</td>
                   <td className="px-4 py-2">{user.phone}</td>
                   <td className="px-4 py-2">{user.packageText}</td>
                   <td className="px-4 py-2">{user.submissionDate}</td>
                   <td className="px-4 py-2">{user.expireDate}</td>
+                  <td className="px-4 py-2 text-center flex gap-2 justify-center">
+                    <button
+                      onClick={() => onEdit(user)}
+                      className="text-blue-600 hover:underline text-sm"
+                    >
+                      แก้ไข
+                    </button>
+                    <button
+                      onClick={() => onDelete(user.id)}
+                      className="text-red-500 hover:underline text-sm"
+                    >
+                      ลบ
+                    </button>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td
-                  colSpan="7"
-                  className="text-center text-gray-500 py-8 font-medium"
-                >
+                <td colSpan="8" className="text-center text-gray-500 py-8 font-medium">
                   ไม่มีข้อมูลผู้ใช้งาน
                 </td>
               </tr>
