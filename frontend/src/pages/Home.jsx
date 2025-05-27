@@ -13,10 +13,9 @@ export default function Home() {
     phone: "",
     time: "",
   });
-
+  const [editingUser, setEditingUser] = useState(null);
   const [users, setUsers] = useState([]);
 
-  // ✅ โหลดผู้ใช้งาน
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
@@ -44,7 +43,6 @@ export default function Home() {
     fetchUsers();
   }, []);
 
-  // ✅ ลบผู้ใช้งาน
   const handleDelete = async (id) => {
     const confirm = window.confirm("คุณต้องการลบผู้ใช้งานนี้หรือไม่?");
     if (!confirm) return;
@@ -57,6 +55,24 @@ export default function Home() {
       setUsers((prev) => prev.filter((user) => user.id !== id));
     } catch (error) {
       toast.error("❌ ไม่สามารถลบผู้ใช้งานได้");
+    }
+  };
+
+  const handleEdit = (user) => {
+    setForm({
+      name: user.name,
+      age: user.age,
+      phone: user.phone,
+      time: user.time,
+    });
+    setEditingUser(user);
+    if (user.packageText.includes("จัดการเอง")) {
+      setSelectedPackage("custom");
+      setCustomHours(parseFloat(user.packageText));
+    } else {
+      const hr = parseInt(user.packageText);
+      setSelectedPackage(hr);
+      setCustomHours("");
     }
   };
 
@@ -81,40 +97,50 @@ export default function Home() {
     }
 
     try {
-      const res = await axios.post(
-        "https://server-playitnow-f6febaec63f7.herokuapp.com/api/users",
-        {
+      if (editingUser) {
+        await axios.put(
+          `https://server-playitnow-f6febaec63f7.herokuapp.com/api/users/${editingUser.id}`,
+          {
+            name: form.name,
+            age: form.age,
+            phone: form.phone,
+            time: form.time,
+            package_type,
+            package_hours,
+          }
+        );
+        toast.success("✏️ แก้ไขข้อมูลสำเร็จ");
+        setEditingUser(null);
+        fetchUsers();
+      } else {
+        const res = await axios.post(
+          "https://server-playitnow-f6febaec63f7.herokuapp.com/api/users",
+          {
+            name: form.name,
+            age: form.age,
+            phone: form.phone,
+            time: form.time,
+            package_type,
+            package_hours,
+          }
+        );
+
+        toast.success("✅ บันทึกผู้ใช้งานสำเร็จ");
+
+        const newUser = {
+          id: res.data.id,
           name: form.name,
           age: form.age,
           phone: form.phone,
           time: form.time,
-          package_type,
-          package_hours,
-        }
-      );
+          packageText: `${package_type} ${package_hours} ชม`,
+          submissionDate: new Date().toLocaleDateString("en-US"),
+          expireDate: new Date(Date.now() + 30 * 86400000).toLocaleDateString("en-US"),
+        };
 
-      toast.success("✅ บันทึกผู้ใช้งานสำเร็จ");
+        setUsers((prev) => [newUser, ...prev]);
+      }
 
-      const newUser = {
-        id: res.data.id,
-        name: form.name,
-        age: form.age,
-        phone: form.phone,
-        time: form.time,
-        packageText: `${package_type} ${package_hours} ชม`,
-        submissionDate: new Date().toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        }),
-        expireDate: new Date(Date.now() + 30 * 86400000).toLocaleDateString("en-US", {
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        }),
-      };
-
-      setUsers((prev) => [newUser, ...prev]);
       setForm({ name: "", age: "", phone: "", time: "" });
       setCustomHours("");
     } catch (err) {
@@ -136,7 +162,7 @@ export default function Home() {
           onChangeCustomHours={setCustomHours}
         />
 
-        <UserTable users={users} onDelete={handleDelete} />
+        <UserTable users={users} onDelete={handleDelete} onEdit={handleEdit} />
       </div>
     </div>
   );
