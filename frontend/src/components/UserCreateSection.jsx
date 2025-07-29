@@ -63,48 +63,54 @@ export default function UserCreateSection({
           </div>
         </div>
   
-        {/* Package Selector */}
+        {/* ชั่วโมงแพคเกจ */}
         <div className="text-center">
-          <h3 className="text-md font-semibold text-blue-600 mb-3">เลือกแพ็กเกจ</h3>
-          <div className="flex justify-center gap-4 flex-wrap">
-            {[1, 5, 10, 20].map((hr) => (
+          <h3 className="text-md font-semibold text-blue-600 mb-3">ชั่วโมงแพคเกจ</h3>
+          <div className="flex justify-center gap-4 flex-wrap mb-4">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((hr) => (
               <button
                 key={hr}
                 type="button"
                 onClick={() => onSelectPackage(hr)}
-                className={`min-w-[100px] px-4 py-2 rounded-xl font-medium border text-sm transition-all duration-200
+                className={`min-w-[80px] px-3 py-2 rounded-lg font-medium border text-sm transition-all duration-200
                   ${selectedPackage === hr
                     ? "bg-blue-100 text-blue-700 border-blue-500 shadow-md"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}
               >
-                {hr} ชั่วโมง
+                {hr} ชม
               </button>
             ))}
-  
-            {/* ✅ ปุ่ม "จัดการเวลาเอง" */}
-            <button
-              type="button"
-              onClick={() => onSelectPackage("custom")}
-              className={`min-w-[140px] px-4 py-2 rounded-xl font-medium border text-sm transition-all duration-200
-                ${selectedPackage === "custom"
-                  ? "bg-blue-100 text-blue-700 border-blue-500 shadow-md"
-                  : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}
-            >
-              จัดการเวลาเอง
-            </button>
           </div>
   
-          {/* ✅ กรอกจำนวนชั่วโมงเอง */}
-          {selectedPackage === "custom" && (
-            <div className="mt-4">
-              <input
-                type="number"
-                min="1"
-                placeholder="กรอกจำนวนชั่วโมง"
-                value={customHours}
-                onChange={(e) => onChangeCustomHours(e.target.value)}
-                className="w-48 mx-auto border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-              />
+          {/* กรอกชั่วโมงเอง */}
+          <div className="flex items-center justify-center gap-3">
+            <input
+              type="number"
+              min="0.5"
+              step="0.5"
+              placeholder="กรอกชั่วโมงเอง"
+              value={customHours}
+              onChange={(e) => onChangeCustomHours(e.target.value)}
+              className="w-32 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center"
+            />
+            <span className="text-gray-600">ชั่วโมง</span>
+            {customHours && (
+              <button
+                type="button"
+                onClick={() => onSelectPackage("custom")}
+                className={`px-4 py-2 rounded-lg font-medium border text-sm transition-all duration-200
+                  ${selectedPackage === "custom"
+                    ? "bg-blue-100 text-blue-700 border-blue-500 shadow-md"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}
+              >
+                ใช้ชั่วโมงนี้
+              </button>
+            )}
+          </div>
+          
+          {selectedPackage === "custom" && customHours && (
+            <div className="mt-2 text-sm text-blue-600">
+              เลือกแล้ว: {customHours} ชั่วโมง
             </div>
           )}
         </div>
@@ -115,7 +121,7 @@ export default function UserCreateSection({
             type="submit"
             className="w-full py-3 bg-blue-600 text-white text-lg rounded-xl font-semibold hover:bg-blue-700 transition"
           >
-            เริ่มกิจกรรม
+            เพิ่มผู้ใช้
           </button>
         </div>
       </form>

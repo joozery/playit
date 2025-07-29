@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { FiSearch } from "react-icons/fi"; // ✅ เพิ่มไอคอน
+import { FiSearch, FiPlay, FiSquare } from "react-icons/fi"; // ✅ เพิ่มไอคอน
+import RealTimeStatus from "./RealTimeStatus";
 
-export default function UserTable({ users, onEdit, onDelete }) {
+export default function UserTable({ users, onEdit, onDelete, onTimeLog }) {
   const [search, setSearch] = useState("");
   const [filteredUsers, setFilteredUsers] = useState(users || []);
 
@@ -38,6 +39,7 @@ export default function UserTable({ users, onEdit, onDelete }) {
               <th className="px-4 py-3">เวลาเริ่ม</th>
               <th className="px-4 py-3">เบอร์โทร</th>
               <th className="px-4 py-3">แพ็กเกจ</th>
+              <th className="px-4 py-3">สถานะ</th>
               <th className="px-4 py-3">บันทึกเมื่อ</th>
               <th className="px-4 py-3">หมดอายุ</th>
               <th className="px-4 py-3 text-center">จัดการ</th>
@@ -52,9 +54,39 @@ export default function UserTable({ users, onEdit, onDelete }) {
                   <td className="px-4 py-2">{user.time}</td>
                   <td className="px-4 py-2">{user.phone}</td>
                   <td className="px-4 py-2">{user.packageText}</td>
+                  <td className="px-4 py-2">
+                    <RealTimeStatus user={user} />
+                  </td>
+
                   <td className="px-4 py-2">{user.submissionDate}</td>
                   <td className="px-4 py-2">{user.expireDate}</td>
                   <td className="px-4 py-2 text-center flex gap-2 justify-center">
+                    <button
+                      onClick={() => onTimeLog(user, 'start')}
+                      disabled={user.current_status === 'playing'}
+                      className={`text-sm flex items-center gap-1 px-3 py-1 rounded-lg font-medium transition-colors ${
+                        user.current_status === 'playing'
+                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                          : 'bg-green-600 text-white hover:bg-green-700'
+                      }`}
+                      title="เริ่มเวลา"
+                    >
+                      <FiPlay className="w-3 h-3" />
+                      Start
+                    </button>
+                    <button
+                      onClick={() => onTimeLog(user, 'stop')}
+                      disabled={user.current_status === 'idle'}
+                      className={`text-sm flex items-center gap-1 px-3 py-1 rounded-lg font-medium transition-colors ${
+                        user.current_status === 'idle'
+                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                          : 'bg-red-600 text-white hover:bg-red-700'
+                      }`}
+                      title="หยุดเวลา"
+                    >
+                      <FiSquare className="w-3 h-3" />
+                      Stop
+                    </button>
                     <button
                       onClick={() => onEdit(user)}
                       className="text-blue-600 hover:underline text-sm"
@@ -72,7 +104,7 @@ export default function UserTable({ users, onEdit, onDelete }) {
               ))
             ) : (
               <tr>
-                <td colSpan="8" className="text-center text-gray-500 py-8 font-medium">
+                <td colSpan="9" className="text-center text-gray-500 py-8 font-medium">
                   ไม่มีข้อมูลผู้ใช้งาน
                 </td>
               </tr>
