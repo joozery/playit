@@ -16,6 +16,7 @@ export default function Home() {
   });
   const [editingUser, setEditingUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const [editingTotalHours, setEditingTotalHours] = useState(0);
 
   const fetchUsers = async () => {
     try {
@@ -80,6 +81,7 @@ export default function Home() {
     setEditingUser(user);
     setSelectedPackage(user.package_hours);
     setCustomHours("");
+    setEditingTotalHours(user.total_hours_played || 0);
   };
 
   const handleChange = (e) => {
@@ -115,6 +117,7 @@ export default function Home() {
             phone: form.phone,
             time: form.time,
             package_hours,
+            total_hours_played: parseFloat(editingTotalHours) || 0,
           }
         );
         toast.success("✏️ แก้ไขข้อมูลสำเร็จ");
@@ -122,6 +125,7 @@ export default function Home() {
         setForm({ name: "", age: "", phone: "", time: "" });
         setSelectedPackage(1);
         setCustomHours("");
+        setEditingTotalHours(0);
         fetchUsers();
       } else {
         const res = await axios.post(
@@ -197,8 +201,8 @@ export default function Home() {
 
 
   return (
-    <div className="min-h-screen bg-[url('/bg.jpg')] bg-cover bg-center py-10 px-4">
-      <div className="max-w-6xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[url('/bg.jpg')] bg-cover bg-center py-6 sm:py-10 px-3 sm:px-4">
+      <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8">
         <UserCreateSection
           form={form}
           onChange={handleChange}
@@ -218,9 +222,9 @@ export default function Home() {
 
         {/* Modal สำหรับแก้ไขผู้ใช้ */}
         {editingUser && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl max-w-md w-full">
-              <div className="p-6">
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-3 sm:p-4 z-50">
+            <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+              <div className="p-4 sm:p-6">
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xl font-semibold text-gray-800">
                     แก้ไขผู้ใช้งาน
@@ -246,6 +250,8 @@ export default function Home() {
                   customHours={customHours}
                   onChangeCustomHours={setCustomHours}
                   isEditing={true}
+                  totalHoursPlayed={editingTotalHours}
+                  onTotalHoursChange={setEditingTotalHours}
                 />
               </div>
             </div>

@@ -12,8 +12,8 @@ export default function UserCreateSection({
         onSubmit={onSubmit}
         className="bg-white p-8 rounded-2xl shadow-md border border-gray-200 space-y-6"
       >
-        {/* Input Fields in 1 row (4 columns) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        {/* Input Fields */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-600">ชื่อ</label>
             <input
@@ -66,13 +66,13 @@ export default function UserCreateSection({
         {/* ชั่วโมงแพคเกจ */}
         <div className="text-center">
           <h3 className="text-md font-semibold text-blue-600 mb-3">ชั่วโมงแพคเกจ</h3>
-          <div className="flex justify-center gap-4 flex-wrap mb-4">
+          <div className="grid grid-cols-5 sm:flex sm:justify-center sm:gap-4 sm:flex-wrap mb-4">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((hr) => (
               <button
                 key={hr}
                 type="button"
                 onClick={() => onSelectPackage(hr)}
-                className={`min-w-[80px] px-3 py-2 rounded-lg font-medium border text-sm transition-all duration-200
+                className={`px-2 py-2 sm:min-w-[80px] sm:px-3 rounded-lg font-medium border text-xs sm:text-sm transition-all duration-200
                   ${selectedPackage === hr
                     ? "bg-blue-100 text-blue-700 border-blue-500 shadow-md"
                     : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"}`}
@@ -83,17 +83,19 @@ export default function UserCreateSection({
           </div>
   
           {/* กรอกชั่วโมงเอง */}
-          <div className="flex items-center justify-center gap-3">
-            <input
-              type="number"
-              min="0.5"
-              step="0.5"
-              placeholder="กรอกชั่วโมงเอง"
-              value={customHours}
-              onChange={(e) => onChangeCustomHours(e.target.value)}
-              className="w-32 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center"
-            />
-            <span className="text-gray-600">ชั่วโมง</span>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <div className="flex items-center gap-2">
+              <input
+                type="number"
+                min="0.5"
+                step="0.5"
+                placeholder="กรอกชั่วโมงเอง"
+                value={customHours}
+                onChange={(e) => onChangeCustomHours(e.target.value)}
+                className="w-32 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 text-center"
+              />
+              <span className="text-gray-600 text-sm">ชั่วโมง</span>
+            </div>
             {customHours && (
               <button
                 type="button"

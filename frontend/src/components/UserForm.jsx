@@ -6,7 +6,9 @@ export default function UserForm({
   onSelectPackage, 
   customHours, 
   onChangeCustomHours,
-  isEditing = false 
+  isEditing = false,
+  totalHoursPlayed = 0,
+  onTotalHoursChange
 }) {
     return (
       <div className="bg-white p-6 rounded-xl shadow-md border border-gray-200">
@@ -95,6 +97,30 @@ export default function UserForm({
               )}
             </div>
           </div>
+
+          {/* ชั่วโมงที่ใช้แล้ว (เฉพาะตอนแก้ไข) */}
+          {isEditing && (
+            <div className="space-y-2">
+              <label className="block text-sm font-medium text-gray-700">
+                ชั่วโมงที่ใช้แล้ว (แก้ไขได้)
+              </label>
+              <div className="flex items-center gap-3">
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  placeholder="0"
+                  value={totalHoursPlayed}
+                  onChange={(e) => onTotalHoursChange(e.target.value)}
+                  className="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                />
+                <span className="text-gray-600">ชั่วโมง</span>
+              </div>
+              <p className="text-xs text-gray-500">
+                ⚠️ การแก้ไขเวลาที่ใช้แล้วจะส่งผลต่อการคำนวณชั่วโมงคงเหลือ
+              </p>
+            </div>
+          )}
   
           <button
             type="submit"

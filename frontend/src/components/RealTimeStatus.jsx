@@ -81,11 +81,11 @@ export default function RealTimeStatus({ user }) {
       <div className="grid grid-cols-2 gap-2 text-xs">
         <div className="bg-blue-50 p-2 rounded">
           <div className="text-blue-600 font-medium">ใช้แล้ว</div>
-          <div className="text-blue-800 font-bold">{user.total_hours_played || 0} ชม</div>
+          <div className="text-blue-800 font-bold text-sm">{user.total_hours_played || 0} ชม</div>
         </div>
         <div className="bg-green-50 p-2 rounded">
           <div className="text-green-600 font-medium">คงเหลือ</div>
-          <div className="text-green-800 font-bold">
+          <div className="text-green-800 font-bold text-sm">
             {Math.max(0, (user.package_hours || 0) - (user.total_hours_played || 0))} ชม
           </div>
         </div>

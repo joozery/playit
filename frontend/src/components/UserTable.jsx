@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiSearch, FiPlay, FiSquare } from "react-icons/fi"; // ✅ เพิ่มไอคอน
 import RealTimeStatus from "./RealTimeStatus";
+import UserCard from "./UserCard";
 
 export default function UserTable({ users, onEdit, onDelete, onTimeLog }) {
   const [search, setSearch] = useState("");
@@ -30,7 +31,8 @@ export default function UserTable({ users, onEdit, onDelete, onTimeLog }) {
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
+      {/* Desktop Table View */}
+      <div className="hidden lg:block overflow-x-auto rounded-lg border border-gray-200">
         <table className="w-full text-sm text-left">
           <thead className="bg-blue-600 text-white">
             <tr>
@@ -57,7 +59,6 @@ export default function UserTable({ users, onEdit, onDelete, onTimeLog }) {
                   <td className="px-4 py-2">
                     <RealTimeStatus user={user} />
                   </td>
-
                   <td className="px-4 py-2">{user.submissionDate}</td>
                   <td className="px-4 py-2">{user.expireDate}</td>
                   <td className="px-4 py-2 text-center flex gap-2 justify-center">
@@ -111,6 +112,25 @@ export default function UserTable({ users, onEdit, onDelete, onTimeLog }) {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="lg:hidden space-y-4">
+        {filteredUsers.length > 0 ? (
+          filteredUsers.map((user) => (
+            <UserCard
+              key={user.id}
+              user={user}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onTimeLog={onTimeLog}
+            />
+          ))
+        ) : (
+          <div className="text-center text-gray-500 py-8 font-medium">
+            ไม่มีข้อมูลผู้ใช้งาน
+          </div>
+        )}
       </div>
     </div>
   );
